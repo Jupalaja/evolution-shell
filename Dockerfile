@@ -1,10 +1,12 @@
 FROM atendai/evolution-api:latest
 
-# Copy environment configuration if needed
+# Copy environment files
 COPY .env.example /app/.env.example
 
-# Expose the port
+# Set working directory  
+WORKDIR /evolution
+
+# Expose port
 EXPOSE 8080
 
-# Use the default command from the base image
-CMD ["node", "dist/src/main.js"]
+# The base image already has the correct entrypoint
