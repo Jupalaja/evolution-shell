@@ -1,18 +1,17 @@
-# Instalación Automática de Docker, Docker Compose, y Evolution API
+# Evolution API con Docker Compose
 
-Este repositorio proporciona un script Bash (`install.sh`) para instalar y configurar Docker, Docker Compose plugin y Evolution API en servidores basados en Ubuntu.
+Este repositorio proporciona una configuración de Docker Compose para ejecutar Evolution API junto con sus servicios requeridos (PostgreSQL y Redis). Esta configuración está diseñada para ser multiplataforma y se puede ejecutar en cualquier máquina con Docker y Docker Compose instalados.
 
 ## Requisitos previos
 
-- Sistema operativo: Ubuntu 18.04, 20.04, 22.04, 24.04 (u otra versión compatible con los repositorios oficiales de Docker)
-- Acceso con usuario que tenga privilegios de sudo
-- Conexión a Internet desde el servidor
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/install/) (generalmente incluido con Docker Desktop)
 
-## Contenido del repositorio
+## Cómo empezar
 
-- `install.sh`: script que automatiza la instalación.
+Sigue estos pasos para poner en marcha tu instancia de Evolution API.
 
-### 1. Descargar o clonar el repositorio
+### 1. Clonar el repositorio
 
 ```bash
 git clone https://github.com/devalexcode/shell-evolution-api.git
@@ -24,21 +23,21 @@ git clone https://github.com/devalexcode/shell-evolution-api.git
 cd shell-evolution-api
 ```
 
-### 3. Crea el archivo `.env`
+### 3. Crea y configura el archivo de entorno
+
+Crea un archivo `.env` copiando el archivo de ejemplo:
 
 ```bash
 cp .env.example .env
 ```
 
-**3.1 ⚙️ Configuración del archivo `.env`**
-
-Antes de levantar los servicios, asegúrate de crear y configurar tu archivo `.env`:
+Ahora, abre `.env` con un editor de texto y personaliza las variables según sea necesario. Como mínimo, debes establecer una contraseña segura para PostgreSQL y una clave de API única.
 
 ```bash
 nano .env
 ```
 
-Edita el archivo `.env` con tus propios valores:
+Estas son las variables clave a configurar:
 
 ```dotenv
 ############################################
@@ -46,11 +45,11 @@ Edita el archivo `.env` con tus propios valores:
 ############################################
 
 # ------------------------------------------
-AUTHENTICATION_API_KEY=api_key # Clave de autenticación para Evolution API (Contraseña de administrador)
+AUTHENTICATION_API_KEY=api_key # CREAR - SE RECOMIENDA UUID
 # ------------------------------------------
-EVOLUTION_API_PORT=8080 # Puerto de escucha para Evolution API
+EVOLUTION_API_PORT=8080 # 
 # ------------------------------------------
-CONFIG_SESSION_PHONE_VERSION=2.3000.1023204200 # Whatsapp Web version for baileys channel: https://web.whatsapp.com/check-update?version=0&platform=web
+CONFIG_SESSION_PHONE_VERSION=2.3000.1023204200
 # ------------------------------------------
 
 ############################################
@@ -58,47 +57,55 @@ CONFIG_SESSION_PHONE_VERSION=2.3000.1023204200 # Whatsapp Web version for bailey
 ############################################
 
 # ------------------------------------------
-POSTGRESS_USER=user # Usuario de PostgreSQL (POR SEGURIDAD MODIFICA ESTE VALOR)
+POSTGRESS_USER=user # CAMBIAR POR UNO SEGURO
 # ------------------------------------------
-POSTGRESS_PASS=123456 # Contraseña de PostgreSQL (POR SEGURIDAD MODIFICA ESTE VALOR)
+POSTGRESS_PASS=123456 # CAMBIAR POR UNO SEGURO
 # ------------------------------------------
-POSTGRESS_PORT=5432 # Puerto de PostgreSQL (Se sugiere no modificar)
+POSTGRESS_PORT=5432
 # ------------------------------------------
 
 ############################################
 # Redis
 ############################################
 
-REDIS_PORT=6379 # Puerto de Redis (Se sugiere no modificar)
+REDIS_PORT=6379 
 ```
 
-### 4. Dar permisos de ejecución al script
+### 4. Iniciar los servicios
+
+Una vez que tu archivo `.env` esté configurado, puedes iniciar todos los servicios usando Docker Compose:
 
 ```bash
-chmod +x install.sh
+docker compose up -d
 ```
 
-### 5 Ejecutar el script
-
-```bash
-./install.sh
-```
-
-- El script actualizará el sistema, instalará Docker y sus herramientas, añadirá el usuario al grupo `docker` desplegará n8n, Evolution API y Portainer.
-
-![Shell instalacion](docs/shell.png)
+Este comando descargará las imágenes de Docker necesarias e iniciará los contenedores de Evolution API, PostgreSQL y Redis en segundo plano.
 
 ## Ingresar a Evolution API
 
-Al finalizar, verás un mensaje indicando la URL de acceso a Evolution API:
+Una vez que los contenedores estén en funcionamiento, puedes acceder a la interfaz de administrador de Evolution API en tu navegador.
 
-```bash
-¡Instalación completada! Evolution API funcionando y accesible: http://<IP_DEL_SERVIDOR>:EVOLUTION_API_PORT/manager
-```
+-   **URL**: `http://localhost:<EVOLUTION_API_PORT>/manager`
+-   Reemplaza `<EVOLUTION_API_PORT>` con el puerto que configuraste en tu archivo `.env` (el predeterminado es `8080`).
+
+
 
 ![Login Evolution API](docs/Evolution-API-login.png)
 
-¡Listo! Con estos pasos tu servidor quedará con Evolution API instalado.
+
+
+## Administrar los servicios
+
+-   Para ver los logs de los servicios:
+    ```bash
+    docker compose logs -f
+    ```
+-   Para detener los servicios:
+    ```bash
+    docker compose down
+    ```
+
+¡Listo! Con estos pasos tendrás Evolution API funcionando en tu máquina.
 
 ## 👨‍💻 Autor
 
