@@ -1,12 +1,10 @@
 FROM atendai/evolution-api:latest
 
-# Copy environment files
-COPY .env.example /app/.env.example
+# Copy environment file
+COPY .env .env
 
-# Set working directory  
-WORKDIR /evolution
-
-# Expose port
+# Expose the port
 EXPOSE 8080
 
-# The base image already has the correct entrypoint
+# Start the application
+CMD ["npm", "start"]
